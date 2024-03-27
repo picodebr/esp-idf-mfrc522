@@ -347,6 +347,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////
 	void PCD_Init();
 	void PCD_Init(byte chipSelectPin, byte resetPowerDownPin);
+	void PCD_Init(byte chipSelectPin, byte resetPowerDownPin, SPI *spi);
 	void PCD_Reset();
 	void PCD_AntennaOn();
 	void PCD_AntennaOff();

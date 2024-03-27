@@ -20,7 +20,7 @@ static const char* LOG_TAG = "SPI";
  */
 SPI::SPI() {
 	m_handle = nullptr;
-	m_host   = HSPI_HOST;
+	m_host   = SPI3_HOST;
 }
 
 
@@ -46,29 +46,29 @@ SPI::~SPI() {
  */
 void SPI::init(int mosiPin, int misoPin, int clkPin, int csPin) {
 	ESP_LOGD(LOG_TAG, "init: mosi=%d, miso=%d, clk=%d, cs=%d", mosiPin, misoPin, clkPin, csPin);
+	esp_err_t errRc;
+// 	spi_bus_config_t bus_config;
+// 	bus_config.sclk_io_num     = clkPin;  // CLK
+// 	bus_config.mosi_io_num     = mosiPin; // MOSI
+// 	bus_config.miso_io_num     = misoPin; // MISO
+// 	bus_config.quadwp_io_num   = -1;      // Not used
+// 	bus_config.quadhd_io_num   = -1;      // Not used
+// 	bus_config.max_transfer_sz = 0;       // 0 means use default.
+//   bus_config.flags           = (SPICOMMON_BUSFLAG_SCLK | SPICOMMON_BUSFLAG_MOSI | SPICOMMON_BUSFLAG_MISO);
+//   bus_config.intr_flags      = ESP_INTR_FLAG_SHARED;
 
-	spi_bus_config_t bus_config;
-	bus_config.sclk_io_num     = clkPin;  // CLK
-	bus_config.mosi_io_num     = mosiPin; // MOSI
-	bus_config.miso_io_num     = misoPin; // MISO
-	bus_config.quadwp_io_num   = -1;      // Not used
-	bus_config.quadhd_io_num   = -1;      // Not used
-	bus_config.max_transfer_sz = 0;       // 0 means use default.
-  bus_config.flags           = (SPICOMMON_BUSFLAG_SCLK | SPICOMMON_BUSFLAG_MOSI | SPICOMMON_BUSFLAG_MISO);
-  bus_config.intr_flags      = ESP_INTR_FLAG_SHARED;
+// 	ESP_LOGI(LOG_TAG, "... Initializing bus; host=%d", m_host);
 
-	ESP_LOGI(LOG_TAG, "... Initializing bus; host=%d", m_host);
+// 	esp_err_t errRc = ::spi_bus_initialize(
+// 			m_host,
+// 			&bus_config,
+// 		  SPI_DMA_CH_AUTO // DMA Channel
+// 	);
 
-	esp_err_t errRc = ::spi_bus_initialize(
-			m_host,
-			&bus_config,
-		  SPI_DMA_CH_AUTO // DMA Channel
-	);
-
-	if (errRc != ESP_OK) {
-		ESP_LOGE(LOG_TAG, "spi_bus_initialize(): rc=0x%x", errRc);
-		abort();
-	}
+// 	if (errRc != ESP_OK) {
+// 		ESP_LOGE(LOG_TAG, "spi_bus_initialize(): rc=0x%x", errRc);
+// 		// abort();
+// 	}
 
 	spi_device_interface_config_t dev_config;
 	dev_config.address_bits     = 0;
@@ -85,10 +85,10 @@ void SPI::init(int mosiPin, int misoPin, int clkPin, int csPin) {
 	dev_config.pre_cb           = NULL;
 	dev_config.post_cb          = NULL;
 	ESP_LOGI(LOG_TAG, "... Adding device bus.");
-	errRc = ::spi_bus_add_device(m_host, &dev_config, &m_handle);
+	errRc = ::spi_bus_add_device((spi_host_device_t)SPI2_HOST, &dev_config, &m_handle);
 	if (errRc != ESP_OK) {
 		ESP_LOGE(LOG_TAG, "spi_bus_add_device(): rc=0x%x", errRc);
-		abort();
+		// abort();
 	}
 } // init
 

@@ -188,10 +188,10 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte* data, byte length, byte* res
  * Initializes the MFRC522 chip.
  */
 void MFRC522::PCD_Init() {
-	// m_spi.setHost(SPI3_HOST);
+	m_spi.setHost(SPI2_HOST);
   	
 	ESP32CPP::GPIO::setOutput((gpio_num_t)_chipSelectPin);
-	m_spi.init(GPIO_NUM_23, GPIO_NUM_19, GPIO_NUM_18, GPIO_NUM_5);
+	m_spi.init(GPIO_NUM_11, GPIO_NUM_13, GPIO_NUM_12, GPIO_NUM_10);
 
 	bool hardReset = false;
 
@@ -246,6 +246,18 @@ void MFRC522::PCD_Init() {
  * @param resetPowerDownPin Pin connected to MFRC522's reset and power down input (Pin 6, NRSTPD, active low)
  */
 void MFRC522::PCD_Init(byte chipSelectPin, byte resetPowerDownPin) {
+	_chipSelectPin = chipSelectPin;
+	_resetPowerDownPin = resetPowerDownPin;
+	// Set the chipSelectPin as digital output, do not select the slave yet
+	PCD_Init();
+} // End PCD_Init()
+
+/**
+ * Initializes the MFRC522 chip.
+ * @param chipSelectPin Pin connected to MFRC522's SPI slave select input (Pin 24, NSS, active low)
+ * @param resetPowerDownPin Pin connected to MFRC522's reset and power down input (Pin 6, NRSTPD, active low)
+ */
+void MFRC522::PCD_Init(byte chipSelectPin, byte resetPowerDownPin, SPI *spi) {
 	_chipSelectPin = chipSelectPin;
 	_resetPowerDownPin = resetPowerDownPin;
 	// Set the chipSelectPin as digital output, do not select the slave yet
