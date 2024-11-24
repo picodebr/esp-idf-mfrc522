@@ -44,7 +44,7 @@ public:
 	 * @brief The default CS pin.
 	 */
 	static const int DEFAULT_CS_PIN   = GPIO_NUM_15;
-
+ 
 	/**
 	 * @brief Value of unset pin.
 	 */

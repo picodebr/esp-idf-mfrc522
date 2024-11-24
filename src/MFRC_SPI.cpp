@@ -5,7 +5,7 @@
  *      Author: kolban
  */
 
-#include "SPI.h"
+#include "MFRC_SPI.h"
 #include <driver/spi_master.h>
 #include <esp_log.h>
 #include "sdkconfig.h"
@@ -20,7 +20,7 @@ static const char* LOG_TAG = "SPI";
  */
 SPI::SPI() {
 	m_handle = nullptr;
-	m_host   = SPI3_HOST;
+	m_host   = SPI2_HOST;
 }
 
 
@@ -84,6 +84,7 @@ void SPI::init(int mosiPin, int misoPin, int clkPin, int csPin) {
 	dev_config.queue_size       = 1;
 	dev_config.pre_cb           = NULL;
 	dev_config.post_cb          = NULL;
+	dev_config.clock_source     = SPI_CLK_SRC_DEFAULT;
 	ESP_LOGI(LOG_TAG, "... Adding device bus.");
 	errRc = ::spi_bus_add_device((spi_host_device_t)SPI2_HOST, &dev_config, &m_handle);
 	if (errRc != ESP_OK) {

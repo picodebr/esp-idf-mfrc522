@@ -77,7 +77,7 @@
 
 
 #include <stdint.h>
-#include <SPI.h>
+#include <MFRC_SPI.h>
 
 typedef uint8_t byte;
 
